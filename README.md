@@ -7,7 +7,7 @@ Simply put a gen.go file in any package in your module containing a go:generate 
 
 pkg/imports/gen.go:
 ```go
-//go:generate go get github.com/edwarnicke/imports-gen/cmd/imports-gen
+//go:generate go get github.com/edwarnicke/imports-gen
 //go:generate imports-gen
 ```
 
