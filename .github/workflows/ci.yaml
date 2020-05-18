@@ -1,0 +1,117 @@
+---
+name: ci
+on:
+  - pull_request
+jobs:
+  yamllint:
+    name: yamllint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v1
+      - name: Install yamllint
+        run: pip install --user yamllint
+      - name: Run yamllint
+        run: ~/.local/bin/yamllint -c .github/ci/.yamllint.yml --strict .
+  golangci-lint:
+    name: golangci-lint
+    runs-on: ubuntu-latest
+    env:
+      GOLANGCI_LINT_CONTAINER: golangci/golangci-lint:v1.23.2
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v1
+      - name: Pull golangci-lint docker container
+        run: docker pull ${GOLANGCI_LINT_CONTAINER}
+      - name: Run golangci-lint
+        run: docker run --rm -v $(pwd):/app -w /app ${GOLANGCI_LINT_CONTAINER} golangci-lint run
+  checkgomod:
+    name: check go.mod and go.sum
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-go@v1
+        with:
+          go-version: 1.13.4
+      - run: go mod tidy
+      - name: Check for changes in go.mod or go.sum
+        run: |
+          git diff --name-only --exit-code go.mod || ( echo "Run go tidy" && false )
+          git diff --name-only --exit-code go.sum || ( echo "Run go tidy" && false )
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v1
+        with:
+          go-version: 1.13.4
+      - run: |
+          go build -race  ./...
+  build-win:
+    name: build-win
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v1
+        with:
+          go-version: 1.13.4
+      - run: |
+          go build -race  ./...
+  build-osx:
+    name: build-osx
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v1
+        with:
+          go-version: 1.13.4
+      - run: |
+          go build -race  ./...
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v1
+        with:
+          go-version: 1.13.4
+      - name: Install gotestsum
+        run: go get gotest.tools/gotestsum@v0.4.0
+      - name: Run tests
+        run: |
+          eval $(go env)
+          mkdir -p ~/junit/
+          ${GOPATH}/bin/gotestsum --junitfile ~/junit/unit-tests.xml -- -race -short $(go list ./...)
+  test-win:
+    name: test-win
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v1
+        with:
+          go-version: 1.13.4
+      - name: Install gotestsum
+        run: go get gotest.tools/gotestsum@v0.4.0
+      - name: Run tests
+        run: |
+          $env:Path += ";$(go env GOPATH)\bin"
+          mkdir $home/junit
+          gotestsum --junitfile $home\junit\unit-tests.xml -- -race -short $(go list .\...)
+  test-osx:
+    name: test-osx
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v1
+        with:
+          go-version: 1.13.4
+      - name: Install gotestsum
+        run: go get gotest.tools/gotestsum@v0.4.0
+      - name: Run tests
+        run: |
+          eval $(go env)
+          mkdir -p ~/junit/
+          ${GOPATH}/bin/gotestsum --junitfile ~/junit/unit-tests.xml -- -race -short $(go list ./...)
