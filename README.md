@@ -1,4 +1,4 @@
-imports-gen is a small go code generator designed to 'prime' a docker container in terms of both
+imports-gen is a small Go code generator designed to 'prime' a docker container in terms of both
 source code download and binary caching.
 
 ## Use
@@ -7,7 +7,8 @@ Simply put a gen.go file in any package in your module containing a go:generate 
 
 pkg/imports/gen.go:
 ```go
-//go:generate go run github.com/edwarnicke/imports-gen
+//go:generate go get github.com/edwarnicke/imports-gen/cmd/imports-gen
+//go:generate imports-gen
 ```
 
 Run:
