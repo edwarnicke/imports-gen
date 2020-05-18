@@ -12,5 +12,5 @@
 *.out
 
 .idea/
-./imports-gen
+imports-gen
 imports.go
