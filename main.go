@@ -74,7 +74,7 @@ func main() {
 
 	// Get the imported packages for the module
 	options = append(options, exechelper.WithDir(modDir))
-	packagesBytes, err := exechelper.Output("go list -f '{{range .Imports}}{{printf \"%s\\n\" .}}{{end}}{{range .XTestImports}}{{printf \"%s\\n\" .}}{{end}}' ./...", options...)
+	packagesBytes, err := exechelper.Output("go list -f '{{range .Imports}}{{printf \"%s\\n\" .}}{{end}}{{range .XTestImports}}{{printf \"%s\\n\" .}}{{end}}{{range .TestImports}}{{printf \"%s\\n\" .}}{{end}}' ./...", options...)
 	if err != nil {
 		log.Fatalf("error exctracting packages: %+v", err)
 	}
