@@ -7,8 +7,8 @@ Simply put a gen.go file in any package in your module containing a go:generate 
 
 pkg/imports/gen.go:
 ```go
-//go:generate go get github.com/edwarnicke/imports-gen
-//go:generate imports-gen
+//go:generate bash -c "cd $(mktemp -d) && GO111MODULE=on go get github.com/edwarnicke/imports-gen@v1.0.1"
+//go:generate bash -c "GOOS=linux ${GOPATH}/bin/imports-gen"
 ```
 
 Run:
@@ -17,7 +17,7 @@ Run:
 go generate ./pkg/imports
 ```
 
-This will result in the creation of a file imports.go, which imports every package imported anywhere in the module.
+This will result in the creation of a file imports_{{GOOS}}.go, which imports every package imported anywhere in the module for that GOOS.
 
 A docker container can then be primed with:
 

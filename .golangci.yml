@@ -156,3 +156,8 @@ issues:
   exclude-use-default: false
   max-issues-per-linter: 0
   max-same-issues: 0
+  exclude-rules:
+    - path: main.go
+      linters:
+        - funlen
+      text: "Function 'main' has too many statements"
