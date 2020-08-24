@@ -1,4 +1,4 @@
-module github.com/edwarnicke/imports-gen
+module github.com/edwarnicke/imports-gen/v2
 
 go 1.14
 
