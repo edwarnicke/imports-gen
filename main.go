@@ -102,7 +102,7 @@ func main() {
 	rawPackages := strings.Split(strings.TrimSpace(string(packagesBytes)), "\n")
 	packagesSeen := make(map[string]bool)
 	for _, pkg := range rawPackages {
-		if !strings.HasPrefix(pkg, modPath) && !packagesSeen[pkg] {
+		if !(strings.HasPrefix(pkg, modPath) || packagesSeen[pkg] || (pkg == "C")) {
 			input.Packages = append(input.Packages, pkg)
 			packagesSeen[pkg] = true
 		}

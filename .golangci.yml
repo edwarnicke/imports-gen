@@ -20,7 +20,7 @@ linters-settings:
   golint:
     min-confidence: 0.8
   goimports:
-    local-prefixes: github.com/networkservicemesh/cmd-forwarder-vppagent
+    local-prefixes: github.com/edwarnicke/imports-gen
   gocyclo:
     min-complexity: 15
   maligned:
@@ -161,3 +161,7 @@ issues:
       linters:
         - funlen
       text: "Function 'main' has too many statements"
+    - path: main.go
+      linters:
+        - gocyclo
+      text: "func `main` is high"
